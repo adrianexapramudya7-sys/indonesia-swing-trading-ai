@@ -71,12 +71,12 @@ export default function Home() {
 
       {/* HEADER */}
 
-      <h1 className="text-8xl font-bold">
-        Indonesia Swing Trading AI
+      <h1 className="text-8xl font-bold text-green-400">
+        EXA AI
       </h1>
 
       <p className="text-3xl text-gray-400 mt-4">
-        AI-powered technical analysis for Indonesian stock market
+        Smart AI platform for Indonesian stock market analysis
       </p>
 
       {/* TOP SIGNAL */}
@@ -151,7 +151,6 @@ export default function Home() {
             width="100%"
             height="600"
             frameBorder="0"
-            allowTransparency={true}
             scrolling="no"
           />
 
