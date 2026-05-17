@@ -20,6 +20,12 @@ export default function Home() {
   const [stocks, setStocks] =
     useState<StockData[]>([]);
 
+  const [ihsg, setIHSG] =
+    useState({
+      price: 7120,
+      change: 0.82,
+    });
+
   const fetchStocks = async () => {
 
     try {
@@ -33,6 +39,25 @@ export default function Home() {
       if (Array.isArray(data)) {
 
         setStocks(data.slice(0, 4));
+
+        /*
+          SIMPLE IHSG SIMULATION
+        */
+
+        const avgChange =
+          data.reduce(
+            (acc: number, item: StockData) =>
+              acc + item.change,
+            0
+          ) / data.length;
+
+        setIHSG({
+          price:
+            7100 + avgChange * 10,
+
+          change:
+            Number(avgChange.toFixed(2)),
+        });
       }
 
     } catch (error) {
@@ -71,13 +96,46 @@ export default function Home() {
 
       {/* HEADER */}
 
-      <h1 className="text-8xl font-bold text-green-400">
-        EXA AI
-      </h1>
+      <div className="flex justify-between items-center flex-wrap gap-6">
 
-      <p className="text-3xl text-gray-400 mt-4">
-        Smart AI platform for Indonesian stock market analysis
-      </p>
+        <div>
+
+          <h1 className="text-8xl font-bold text-green-400">
+            EXA AI
+          </h1>
+
+          <p className="text-3xl text-gray-400 mt-4">
+            Smart AI platform for Indonesian stock market analysis
+          </p>
+
+        </div>
+
+        {/* IHSG CARD */}
+
+        <div className="bg-[#020d40] border border-gray-800 rounded-3xl p-8 min-w-[320px]">
+
+          <p className="text-2xl text-gray-400">
+            IHSG
+          </p>
+
+          <h2 className="text-6xl font-bold mt-4">
+            {ihsg.price.toFixed(2)}
+          </h2>
+
+          <p
+            className={`text-3xl font-bold mt-4 ${
+              ihsg.change >= 0
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
+            {ihsg.change >= 0 ? "+" : ""}
+            {ihsg.change}%
+          </p>
+
+        </div>
+
+      </div>
 
       {/* TOP SIGNAL */}
 
