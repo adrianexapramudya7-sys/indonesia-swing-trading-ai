@@ -22,13 +22,17 @@ export default function Home() {
 
   const [ihsg, setIHSG] =
     useState({
-      price: 7120,
-      change: 0.82,
+      price: 0,
+      change: 0,
     });
 
-  const fetchStocks = async () => {
+  const fetchData = async () => {
 
     try {
+
+      /*
+        FETCH STOCKS
+      */
 
       const res =
         await fetch("/api/scanner");
@@ -39,26 +43,19 @@ export default function Home() {
       if (Array.isArray(data)) {
 
         setStocks(data.slice(0, 4));
-
-        /*
-          SIMPLE IHSG SIMULATION
-        */
-
-        const avgChange =
-          data.reduce(
-            (acc: number, item: StockData) =>
-              acc + item.change,
-            0
-          ) / data.length;
-
-        setIHSG({
-          price:
-            7100 + avgChange * 10,
-
-          change:
-            Number(avgChange.toFixed(2)),
-        });
       }
+
+      /*
+        FETCH REALTIME IHSG
+      */
+
+      const ihsgRes =
+        await fetch("/api/ihsg");
+
+      const ihsgData =
+        await ihsgRes.json();
+
+      setIHSG(ihsgData);
 
     } catch (error) {
 
@@ -68,12 +65,12 @@ export default function Home() {
 
   useEffect(() => {
 
-    fetchStocks();
+    fetchData();
 
     const interval =
       setInterval(() => {
 
-        fetchStocks();
+        fetchData();
 
       }, 30000);
 
@@ -110,7 +107,7 @@ export default function Home() {
 
         </div>
 
-        {/* IHSG CARD */}
+        {/* REALTIME IHSG */}
 
         <div className="bg-[#020d40] border border-gray-800 rounded-3xl p-8 min-w-[320px]">
 
@@ -119,7 +116,7 @@ export default function Home() {
           </p>
 
           <h2 className="text-6xl font-bold mt-4">
-            {ihsg.price.toFixed(2)}
+            {Number(ihsg.price).toFixed(2)}
           </h2>
 
           <p
@@ -130,7 +127,7 @@ export default function Home() {
             }`}
           >
             {ihsg.change >= 0 ? "+" : ""}
-            {ihsg.change}%
+            {Number(ihsg.change).toFixed(2)}%
           </p>
 
         </div>
@@ -186,9 +183,9 @@ export default function Home() {
 
         <p className="text-3xl text-gray-300 mt-10 leading-loose">
 
-          IHSG saat ini berada dalam fase sideways menuju bullish reversal.
-          Sektor energi dan komoditas menunjukkan momentum penguatan,
-          terutama pada saham dengan volume breakout tinggi.
+          IHSG saat ini berada dalam fase market realtime Indonesia.
+          AI Scanner EXA AI terus memantau momentum saham,
+          volume transaksi, dan perubahan market secara otomatis.
 
         </p>
 
