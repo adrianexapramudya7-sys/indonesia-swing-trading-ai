@@ -26,6 +26,12 @@ export default function Home() {
       change: 0,
     });
 
+  const [topGainers, setTopGainers] =
+    useState<StockData[]>([]);
+
+  const [topLosers, setTopLosers] =
+    useState<StockData[]>([]);
+
   const fetchData = async () => {
 
     try {
@@ -43,6 +49,34 @@ export default function Home() {
       if (Array.isArray(data)) {
 
         setStocks(data.slice(0, 4));
+
+        /*
+          TOP GAINERS
+        */
+
+        const gainers =
+          [...data]
+            .sort(
+              (a, b) =>
+                b.change - a.change
+            )
+            .slice(0, 5);
+
+        setTopGainers(gainers);
+
+        /*
+          TOP LOSERS
+        */
+
+        const losers =
+          [...data]
+            .sort(
+              (a, b) =>
+                a.change - b.change
+            )
+            .slice(0, 5);
+
+        setTopLosers(losers);
       }
 
       /*
@@ -173,6 +207,94 @@ export default function Home() {
 
       </div>
 
+      {/* TOP GAINERS & LOSERS */}
+
+      <div className="grid md:grid-cols-2 gap-8 mt-12">
+
+        {/* TOP GAINERS */}
+
+        <div className="bg-[#020d40] border border-gray-800 rounded-3xl p-8">
+
+          <h2 className="text-5xl font-bold text-green-400">
+            Top Gainers
+          </h2>
+
+          <div className="space-y-5 mt-8">
+
+            {topGainers.map((stock, index) => (
+
+              <div
+                key={`${stock.symbol}-gainer-${index}`}
+                className="flex justify-between items-center border-b border-gray-800 pb-4"
+              >
+
+                <div>
+
+                  <p className="text-3xl font-bold">
+                    {stock.symbol}
+                  </p>
+
+                  <p className="text-gray-400">
+                    {stock.name}
+                  </p>
+
+                </div>
+
+                <p className="text-3xl font-bold text-green-400">
+                  +{stock.change.toFixed(2)}%
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+        {/* TOP LOSERS */}
+
+        <div className="bg-[#020d40] border border-gray-800 rounded-3xl p-8">
+
+          <h2 className="text-5xl font-bold text-red-400">
+            Top Losers
+          </h2>
+
+          <div className="space-y-5 mt-8">
+
+            {topLosers.map((stock, index) => (
+
+              <div
+                key={`${stock.symbol}-loser-${index}`}
+                className="flex justify-between items-center border-b border-gray-800 pb-4"
+              >
+
+                <div>
+
+                  <p className="text-3xl font-bold">
+                    {stock.symbol}
+                  </p>
+
+                  <p className="text-gray-400">
+                    {stock.name}
+                  </p>
+
+                </div>
+
+                <p className="text-3xl font-bold text-red-400">
+                  {stock.change.toFixed(2)}%
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </div>
+
       {/* AI MARKET ANALYSIS */}
 
       <div className="bg-[#020d40] border border-gray-800 rounded-3xl p-10 mt-12">
@@ -218,67 +340,35 @@ export default function Home() {
       <div className="grid md:grid-cols-4 gap-6 mt-12">
 
         <Link href="/watchlist">
-
           <div className="bg-[#11111b] hover:bg-[#1a1a2f] transition rounded-3xl p-8 cursor-pointer">
-
             <h2 className="text-4xl font-bold text-cyan-400">
               Watchlist
             </h2>
-
-            <p className="text-xl text-gray-400 mt-4">
-              Realtime AI stock watchlist Indonesia.
-            </p>
-
           </div>
-
         </Link>
 
         <Link href="/scanner">
-
           <div className="bg-[#11111b] hover:bg-[#1a1a2f] transition rounded-3xl p-8 cursor-pointer">
-
             <h2 className="text-4xl font-bold text-green-400">
               AI Scanner
             </h2>
-
-            <p className="text-xl text-gray-400 mt-4">
-              Realtime AI scanner dengan RSI & MACD.
-            </p>
-
           </div>
-
         </Link>
 
         <Link href="/signals">
-
           <div className="bg-[#11111b] hover:bg-[#1a1a2f] transition rounded-3xl p-8 cursor-pointer">
-
             <h2 className="text-4xl font-bold text-pink-400">
               Trading Signals
             </h2>
-
-            <p className="text-xl text-gray-400 mt-4">
-              AI generated entry dan momentum analysis.
-            </p>
-
           </div>
-
         </Link>
 
         <Link href="/news">
-
           <div className="bg-[#11111b] hover:bg-[#1a1a2f] transition rounded-3xl p-8 cursor-pointer">
-
             <h2 className="text-4xl font-bold text-yellow-400">
               Market News
             </h2>
-
-            <p className="text-xl text-gray-400 mt-4">
-              Realtime berita saham Indonesia.
-            </p>
-
           </div>
-
         </Link>
 
       </div>
